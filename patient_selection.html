@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s ease-in-out;
+        }
+
+        .btn-existing {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-new {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        #user_id_section {
+            display: none;
+            margin-top: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        #continueBtn {
+            display: none;
+            background: #ff9800;
+            color: white;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Select Patient Type</h2>
+        <div class="button-group">
+            <button type="button" class="btn btn-existing" id="existingBtn">Existing Patient</button>
+            <button type="button" class="btn btn-new" id="newBtn">New Patient</button>
+        </div>
+
+        <form id="patientSelectionForm">
+            <div id="user_id_section">
+                <label for="user_id">Enter Patient ID:</label>
+                <input type="text" name="user_id" id="user_id">
+            </div>
+
+            <button type="submit" class="btn" id="continueBtn">Continue</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("existingBtn").addEventListener("click", function () {
+            document.getElementById("user_id_section").style.display = "block";
+            document.getElementById("continueBtn").style.display = "block";
+            sessionStorage.setItem("patient_type", "existing"); // Save patient type
+        });
+
+        document.getElementById("newBtn").addEventListener("click", function () {
+            document.getElementById("user_id_section").style.display = "none";
+            document.getElementById("continueBtn").style.display = "block";
+            sessionStorage.setItem("patient_type", "new"); // Save patient type
+        });
+
+        document.getElementById("patientSelectionForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            let patientType = sessionStorage.getItem("patient_type");
+            let userId = document.getElementById("user_id").value;
+
+            let requestBody = { patient_type: patientType };
+            if (patientType === "existing") {
+                requestBody["user_id"] = userId;
+            }
+
+            try {
+                let response = await fetch("http://127.0.0.1:5000/select-patient", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                let result = await response.json();
+                console.log("✅ Redirecting to:", result.redirect);
+
+                window.location.href = result.redirect;
+
+            } catch (error) {
+                console.error("❌ Error:", error);
+                alert("Error selecting patient. Please try again.");
+            }
+        });
+    </script>
+</body>
+
+</html>

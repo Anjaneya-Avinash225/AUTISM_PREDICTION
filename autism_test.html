@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autism Screening Test</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #uniqueId {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-weight: bold;
+            color: #333;
+            background: #ffd700;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            margin: auto;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            text-align: left;
+            margin-top: 12px;
+        }
+
+        input[type="radio"],
+        select,
+        input[type="number"] {
+            margin-left: 10px;
+        }
+        #classificationResult img {
+    max-width: 80%;  /* Ensures image does not overflow */
+    height: auto;     /* Maintains aspect ratio */
+    display: block;   /* Centers the image */
+    margin: 10px auto; /* Adds spacing around the image */
+    border-radius: 10px; /* Optional: Soft edges */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Adds shadow effect */
+}
+/* Modal Background */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Close Button */
+.close {
+    color: red;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: darkred;
+}
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        p#result,
+        p#classificationResult {
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div id="uniqueId">ID: Loading...</div>
+    <h2>Adult Autism Screening Test</h2>
+    <form id="autismForm">
+        <label>Name: <input type="text" name="name" required></label><br>
+        <label>Age: <input type="number" name="age" required></label><br>
+
+        <p>Answer the following questions (0 = No, 1 = Yes):</p>
+
+        <label>1. Do you find it difficult to understand what others are thinking or feeling?</label>
+        <div>
+            <input type="radio" name="A1_Score" value="1" required> Yes <br>
+            <input type="radio" name="A1_Score" value="0"> No <br>
+        </div>
+
+        <label>2. Do you struggle to maintain eye contact during conversations?</label>
+        <div>
+            <input type="radio" name="A2_Score" value="1" required> Yes <br>
+            <input type="radio" name="A2_Score" value="0"> No <br>
+        </div>
+
+        <label>3. Do you find small talk or casual conversations difficult or uninteresting?</label>
+        <div>
+            <input type="radio" name="A3_Score" value="1" required> Yes <br>
+            <input type="radio" name="A3_Score" value="0"> No <br>
+        </div>
+
+        <label>4. Do you prefer to be alone rather than socializing with others?</label>
+        <div>
+            <input type="radio" name="A4_Score" value="1" required> Yes <br>
+            <input type="radio" name="A4_Score" value="0"> No <br>
+        </div>
+
+        <label>5. Do you have difficulty understanding jokes, sarcasm, or figurative language?</label>
+        <div>
+            <input type="radio" name="A5_Score" value="1" required> Yes <br>
+            <input type="radio" name="A5_Score" value="0"> No <br>
+        </div>
+
+        <label>6. Do you find it challenging to start or maintain a conversation?</label>
+        <div>
+            <input type="radio" name="A6_Score" value="1" required> Yes <br>
+            <input type="radio" name="A6_Score" value="0"> No <br>
+        </div>
+
+        <label>7. Do you engage in repetitive behaviors such as hand-flapping, rocking, or repeating certain
+            phrases?</label>
+        <div>
+            <input type="radio" name="A7_Score" value="1" required> Yes <br>
+            <input type="radio" name="A7_Score" value="0"> No <br>
+        </div>
+
+        <label>8. Are you highly sensitive to sounds, lights, textures, or other sensory experiences?</label>
+        <div>
+            <input type="radio" name="A8_Score" value="1" required> Yes <br>
+            <input type="radio" name="A8_Score" value="0"> No <br>
+        </div>
+
+        <label>9. Do you strongly prefer routines and get upset when they are disrupted?</label>
+        <div>
+            <input type="radio" name="A9_Score" value="1" required> Yes <br>
+            <input type="radio" name="A9_Score" value="0"> No <br>
+        </div>
+
+        <label>10. Do you have a deep, intense interest in specific topics and tend to focus on them
+            extensively?</label>
+        <div>
+            <input type="radio" name="A10_Score" value="1" required> Yes <br>
+            <input type="radio" name="A10_Score" value="0"> No <br>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+    <p id="result"></p>
+</div>
+
+    <div class="container hidden" id="classificationStep">
+        <h2>Autism Classification</h2>
+        <form id="classificationForm">
+            <p>Answer these additional questions:</p>
+    
+            <label>1. How do you feel about social interactions?
+                <select name="Q1" required>
+                    <option > </option>
+                    <option value="A">I avoid them</option>
+                    <option value="B">I struggle but try</option>
+                    <option value="C">I used to enjoy but stopped</option>
+                    <option value="D">I don’t react much</option>
+                </select>
+            </label><br>
+    
+            <label>2. Have you lost skills you previously had?
+                <select name="Q2" required>
+                    <option> </option>
+                    <option value="A">No, I’ve been the same</option>
+                    <option value="B">Yes, I lost speech/motor skills</option>
+                    <option value="C">I lost hand coordination</option>
+                    <option value="D">I used to be fine, now I struggle</option>
+                </select>
+            </label><br>
+    
+            <label>3. How do you respond to changes in routine?
+                <select name="Q3" required>
+                    <option> </option>
+                    <option value="A">I get extremely upset</option>
+                    <option value="B">I prefer routine but can adapt</option>
+                    <option value="C">I don’t react much</option>
+                    <option value="D">I used to handle changes but now struggle</option>
+                </select>
+            </label><br>
+    
+            <label>4. Do you have repetitive behaviors?
+                <select name="Q4" required>
+                    <option> </option>
+                    <option value="A">Yes, I repeat words/actions</option>
+                    <option value="B">Yes, I have repetitive hand movements</option>
+                    <option value="C">No repetitive behaviors</option>
+                </select>
+            </label><br>
+    
+            <label>5. How would you describe your communication skills?
+                <select name="Q5" required>
+                    <option> </option>
+                    <option value="A">I speak well but struggle with sarcasm</option>
+                    <option value="B">I have difficulty forming sentences</option>
+                    <option value="C">I used to talk but lost speech</option>
+                    <option value="D">I repeat words without meaning</option>
+                </select>
+            </label><br>
+    
+            <button type="submit">Classify</button>
+        </form>
+        <p id="classificationResult"></p>
+        <!-- Button to Open Modal -->
+        <button id="treatmentBtn">Treatment Information</button>
+        
+        <!-- Hidden Modal -->
+        <div id="treatmentModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>ASD Treatment Information</h2>
+                <p>Autism spectrum disorder (ASD) has no cure, and there is no clear-cut treatment for it. Treatment of ASD
+                    depends on the symptoms of an individual.</p>
+        
+                <h3>Treatment Options:</h3>
+                <ul>
+                    <li><strong>Behavioral and communication therapy:</strong> These programs educate children on how to behave and improve communication skills. A reward-based incentive system
+                    (applied behavior analysis) may improve learning abilities and apply these skills to various settings.</li>
+                    <li><strong>Educational therapy:</strong> Highly organized educational programs mayimprove social skills, communication, and behavior. Children who received such programs in preschool have shown good
+                    results.</li>
+                    <li><strong>Family therapy:</strong>Family members are counseled to take an initiative to interact with children and teach them social skills, discipline,
+                    daily living, and communication.</li>
+                    <li><strong>Other therapies:</strong> A psychologist can advise you on how to deal with
+                    problematic conduct. Speech therapy and physical therapy may improve communication skills and improve mobility that
+                    helps with daily living.</li>
+                    <li><strong>Medications:</strong> There is no medicine to cure ASD. However, the child may be given certain medications such as antipsychotic drugs and
+                    antidepressants depending on their symptoms.</li>
+                </ul>
+            </div>
+    </div>
+
+
+    <script>
+          // Fetch Unique ID from Flask Session and Display It
+           async function fetchUniqueId() {
+                let response = await fetch("/get_user_id");
+                let result = await response.json();
+                document.getElementById("uniqueId").innerText = "ID: " + result.user_id;
+            }
+
+       document.getElementById("autismForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            let formData = new FormData(event.target);
+            let jsonObject = {};
+            formData.forEach((value, key) => { jsonObject[key] = value; });
+
+            try {
+                let response = await fetch("/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(jsonObject)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                let result = await response.json();
+
+                // Store name and A-scores for classification
+                localStorage.setItem("user_name", jsonObject["name"]);  // Store name for next request
+                localStorage.setItem("autism_scores", JSON.stringify(jsonObject));
+
+                document.getElementById("result").innerHTML = `
+            <p><strong>Name:</strong> ${jsonObject["name"]}</p>
+            <p><strong>Diagnosis:</strong> ${result.prediction}</p>
+        `;
+
+                if (result.prediction === "Autistic") {
+                    document.getElementById("classificationStep").classList.remove("hidden");
+                }
+            } catch (error) {
+                console.error("❌ Error:", error);
+                document.getElementById("result").innerText = "Error connecting to server.";
+            }
+        });
+
+
+        document.getElementById("classificationForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+                let formData = new FormData(event.target);
+                let jsonObject = {};
+                formData.forEach((value, key) => { jsonObject[key] = value; });
+
+                // ✅ Retrieve name and scores from localStorage
+                jsonObject["name"] = localStorage.getItem("user_name");
+                let autismScores = JSON.parse(localStorage.getItem("autism_scores"));
+
+                // // ✅ Ensure missing behavioral factors are included (default 0 if missing)
+                // let behavioralFactors = {
+                //     "Routine_Change_Struggle": autismScores["Routine_Change_Struggle"] || "0",
+                //     "Social_Anxiety": autismScores["Social_Anxiety"] || "0",
+                //     "Eye_Contact_Avoidance": autismScores["Eye_Contact_Avoidance"] || "0"
+                // };
+
+                jsonObject = { ...jsonObject, ...autismScores,};
+
+                console.log("📤 Sending Classification Data:", JSON.stringify(jsonObject)); // Debugging
+
+                try {
+                    let response = await fetch("/classify", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(jsonObject)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    let result = await response.json();
+
+                    document.getElementById("classificationResult").innerHTML = `
+            <p><strong>User ID:</strong> ${result.user_id}</p>
+            <p><strong>Name:</strong> ${result.name}</p>
+            <p><strong>Autism Type:</strong> ${result.classification_result.autism_type}</p>
+            <p><strong>Autism Level:</strong> ${result.classification_result.autism_level}</p>
+            <h3>Autism Trait Profile:</h3>
+            <img id="radarChart" src="" alt="Autism Radar Chart">
+        `;
+
+                    // ✅ Insert Base64 images into HTML
+                    document.getElementById("radarChart").src = "data:image/png;base64," + result.chart_radar;
+                } catch (error) {
+                    console.error("❌ Error:", error);
+                    document.getElementById("classificationResult").innerText = "Error connecting to server.";
+                }
+                            let modal = document.getElementById("treatmentModal");
+            let btn = document.getElementById("treatmentBtn");
+            let span = document.getElementsByClassName("close")[0];
+
+            // Open modal when button is clicked
+            btn.onclick = function () {
+                modal.style.display = "block";
+            };
+
+            // Close modal when clicking the close button
+            span.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            // Close modal when clicking outside the modal
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+
+            });
+        fetchUniqueId();
+
+    </script>
+</body>
+
+</html>
